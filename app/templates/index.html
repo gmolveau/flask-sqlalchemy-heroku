@@ -1,0 +1,13 @@
+<html>
+  <head>
+    <title>Flask App</title>
+  </head>
+  <body>
+    <h1>{{message}}</h1>
+	{% for entry in entries %}
+		<li><h2>{{ entry.title }}</h2>{{ entry.text|safe }}
+	{% else %}
+		<li><em>Unbelievable.  No entries here so far.</em>
+	{% endfor %}
+  </body>
+</html>

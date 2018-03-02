@@ -1,0 +1,28 @@
+version: '3.3'
+
+services:
+
+  db:
+    image: postgres:10.2-alpine
+    networks:
+     - backend
+    restart:
+      always
+    volumes:
+      - ./docker_volumes/postgresql/data:/var/lib/postgresql/data
+
+  web:
+    build: .
+    depends_on:
+      - db
+    environment:
+      DATABASE_URL: postgres://postgres:postgres@db:5432/postgres
+    networks:
+     - backend
+    restart:
+      always
+    ports:
+      - "5000:5000"
+
+networks:
+  backend:
