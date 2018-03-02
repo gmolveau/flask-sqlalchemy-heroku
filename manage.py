@@ -32,7 +32,9 @@ def makeAdmin(user_id):
 
 @manager.command
 def scheduleTime():
-    app.logger.debug(str(time.time()))
+    t = "i am a scheduled action, yeah"
+    print(t)
+    app.logger.debug(t)
 
 # manager's doc = https://flask-script.readthedocs.io/en/latest/
 
