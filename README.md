@@ -40,6 +40,3 @@ docker-compose up --build -d
 Schedule a task for free every 10 minutes, every hour, or every day with heroku-scheduler :
 
 ![Scheduler](heroku_scheduler_example.png)
-
-Once deployed on heroku, please go to your [dashboard](https://dashboard.heroku.com/apps), select your app, go to `settings`, `reveal config vars` and copy the value of the `HEROKU_POSTGRESQL_???_URL` into `DATABASE_URL`.
-
