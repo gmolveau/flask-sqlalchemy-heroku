@@ -1,8 +1,12 @@
 FROM alpine:3.7
 
 RUN apk update && \
-    apk add --no-cache bash postgresql-client python3 py3-psycopg2 && \
+    apk add --no-cache bash libffi-dev postgresql-client python3 py3-psycopg2 && \
     mkdir /flask_app
+
+#FROM python:3-slim
+
+#RUN apt-get update && apt-get install -y postgresql-client && mkdir /flask_app
 
 ADD . /flask_app
 WORKDIR /flask_app
