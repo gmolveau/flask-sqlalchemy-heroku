@@ -31,7 +31,7 @@ def makeAdmin(user_id):
     print("temps nécessaire =",str(time_end - time_start),"seconds. \n")
 
 @manager.command
-def scheduleTime():
+def scheduleTask():
     t = "i am a scheduled action, yeah"
     print(t)
     app.logger.debug(t)
