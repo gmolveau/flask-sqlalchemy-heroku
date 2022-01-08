@@ -1,11 +1,14 @@
+from functools import wraps
+
 from flask import jsonify, request, g
 from flask_expects_json import expects_json
+from marshmallow import ValidationError
 
 from . import api
 from .. import db, bcrypt
 
 from ..models.post import Post
-from ..schemas.post import post_schema, posts_schema
+from ..schemas.post import PostSchema, post_schema, posts_schema
 from ..models.user import User
 from ..schemas.user import user_schema, users_schema
 
@@ -69,27 +72,31 @@ def get_user(username):
         return user_schema.jsonify(user),200
     return jsonify(error="user not found"),404
 
+def required_params(schema):
+    def decorator(fn):
+        @wraps(fn)
+        def wrapper(*args, **kwargs):
+            try:
+                schema.load(request.get_json())
+            except ValidationError as err:
+                error = {
+                    "status": "error",
+                    "messages": err.messages
+                }
+                return jsonify(error), 400
+            return fn(*args, **kwargs)
+
+        return wrapper
+    return decorator
 
 @api.post('/posts')
+@required_params(post_schema)
 def create_post():
     datas = request.get_json()
-
-    url = datas.get('url', '')
-    if url == "":
-        return jsonify(error="url is empty"),400
-
-    description = datas.get('description', '')
-    if description == "":
-        return jsonify(error="description is empty"),400
-
-    user_id = datas.get('user_id', '')
-    if user_id == "":
-        return jsonify(error="user_id is empty"),400
-
     post = Post()
-    post.url = url
-    post.description = description
-    post.user_id = user_id
+    post.url = datas.get('url')
+    post.description = datas.get('description')
+    post.user_id = datas.get('user_id')
 
     db.session.add(post)
     db.session.commit()

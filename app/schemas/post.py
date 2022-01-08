@@ -1,4 +1,4 @@
-from marshmallow import fields
+from marshmallow import fields, EXCLUDE
 from .. import ma
 
 from ..models.post import Post
@@ -8,6 +8,7 @@ class PostSchema(ma.SQLAlchemyAutoSchema):
 
     class Meta:
         model = Post
+        unknown = EXCLUDE
 
 
 post_schema = PostSchema()
