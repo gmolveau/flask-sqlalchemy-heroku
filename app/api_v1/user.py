@@ -85,7 +85,6 @@ def required_params(schema):
                 }
                 return jsonify(error), 400
             return fn(*args, **kwargs)
-
         return wrapper
     return decorator
 
