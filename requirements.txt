@@ -7,6 +7,7 @@ charset-normalizer==2.0.10
 click==8.0.3
 Flask==2.0.2
 Flask-Bcrypt==0.7.1
+flask-expects-json==1.7.0
 flask-marshmallow==0.14.0
 Flask-Migrate==3.1.0
 Flask-SQLAlchemy==2.5.1
@@ -16,6 +17,7 @@ idna==3.3
 iniconfig==1.1.1
 itsdangerous==2.0.1
 Jinja2==3.0.3
+jsonschema==4.3.3
 Mako==1.1.6
 MarkupSafe==2.0.1
 marshmallow==3.14.1
@@ -26,6 +28,7 @@ psycopg2==2.9.3
 py==1.11.0
 pycparser==2.21
 pyparsing==3.0.6
+pyrsistent==0.18.0
 pytest==6.2.5
 python-dotenv==0.19.2
 requests==2.27.1

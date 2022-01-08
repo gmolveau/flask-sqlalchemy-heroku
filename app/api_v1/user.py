@@ -1,4 +1,5 @@
-from flask import jsonify, request
+from flask import jsonify, request, g
+from flask_expects_json import expects_json
 
 from . import api
 from .. import db, bcrypt
@@ -8,39 +9,38 @@ from ..schemas.post import post_schema, posts_schema
 from ..models.user import User
 from ..schemas.user import user_schema, users_schema
 
-@api.route('/register', methods=['POST'])
+schema = {
+    'type': 'object',
+    'properties': {
+        'username': {'type': 'string'},
+        'email': {'type': 'string'},
+        'password': {'type': 'string'}
+    },
+    'required': ['username', 'email', 'password']
+}
+
+@api.post('/register')
+@expects_json(schema) # example of a decorator to fail if the request is not JSON
 def register():
-    datas = request.get_json()
-    username=datas.get('username','')
-    if username is '':
-        return jsonify(error="username is empty"),400
-    email=datas.get('email','')
-    if email is '':
-        return jsonify(error="email is empty"),400
-    password=datas.get('password','')
-    if password is '':
-        return jsonify(error="password is empty"),400
-
     u = User()
-    u.username = username
-    u.email = email
-    u.password = bcrypt.generate_password_hash(password)
-
+    u.username = g.data.get('username')
+    u.email = g.data.get('email')
+    u.password = bcrypt.generate_password_hash(g.data.get('password'))
     db.session.add(u)
     db.session.commit()
     return user_schema.jsonify(u),200
 
-
-@api.route('/login', methods=['POST'])
+@api.post('/login')
+@expects_json() # example of a decorator to fail if the request is not JSON
 def login_with_username_or_email():
     datas = request.get_json()
 
     password=datas.get('password','')
-    if password is '':
+    if password == "":
         return jsonify(error="password is empty"),400
 
     username=datas.get('username','')
-    if username is '':
+    if username == "":
         return jsonify(error="username is empty"),400
 
     user = User.query.filter(User.username.ilike(username)).first()
@@ -52,7 +52,7 @@ def login_with_username_or_email():
         return jsonify(error="username, mail or password is incorrect"),300
 
     email=datas.get('email','')
-    if email is '':
+    if email == "":
         return jsonify(error="email is empty"),400
 
     user = User.query.filter(User.email.ilike(email)).first()
@@ -62,7 +62,7 @@ def login_with_username_or_email():
     return jsonify(error="username, mail or password is incorrect"),300
 
 
-@api.route('/users/<string:username>', methods=['GET'])
+@api.get('/users/<string:username>')
 def get_user(username):
     user = User.query.filter(User.username.ilike(username)).first()
     if user is not None:
@@ -70,20 +70,20 @@ def get_user(username):
     return jsonify(error="user not found"),404
 
 
-@api.route('/posts', methods=['POST'])
+@api.post('/posts')
 def create_post():
     datas = request.get_json()
 
     url = datas.get('url', '')
-    if url is '':
+    if url == "":
         return jsonify(error="url is empty"),400
 
     description = datas.get('description', '')
-    if description is '':
+    if description == "":
         return jsonify(error="description is empty"),400
 
     user_id = datas.get('user_id', '')
-    if user_id is '':
+    if user_id == "":
         return jsonify(error="user_id is empty"),400
 
     post = Post()
@@ -96,11 +96,11 @@ def create_post():
     return post_schema.jsonify(post),200
 
 
-@api.route('/posts/<int:post_id>/upvote', methods=['POST'])
+@api.post('/posts/<int:post_id>/upvote')
 def upvote_post(post_id):
     datas = request.get_json()
     user_id = datas.get('user_id', '')
-    if user_id is '':
+    if user_id == "":
         return jsonify(error="user_id is empty"),400
 
     user = User.query.get(user_id)
@@ -114,11 +114,11 @@ def upvote_post(post_id):
     return jsonify(error="user not found"),404
 
 
-@api.route('/follow/<follow_id>', methods=['POST'])
+@api.post('/follow/<follow_id>')
 def follow_user(follow_id):
     datas = request.get_json()
     user_id = datas.get('user_id', '')
-    if user_id is '':
+    if user_id == "":
         return jsonify(error="user_id is empty"),400
 
     user = User.query.get(user_id)
@@ -132,11 +132,11 @@ def follow_user(follow_id):
     return jsonify(error="user not found"),404
 
 
-@api.route('/follow/<int:follow_id>', methods=['DELETE'])
+@api.delete('/follow/<int:follow_id>')
 def unfollow_user(follow_id):
     datas = request.get_json()
     user_id = datas.get('user_id', '')
-    if user_id is '':
+    if user_id == "":
         return jsonify(error="user_id is empty"),400
 
     user = User.query.get(user_id)
