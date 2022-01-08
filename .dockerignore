@@ -1,9 +1,0 @@
-LICENSE
-README.md
-.gitignore
-.editorconfig
-.env
-venv
-docker_volumes
-Procfile
-Procfile.windows

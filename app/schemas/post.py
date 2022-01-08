@@ -4,7 +4,7 @@ from .. import ma
 from ..models.post import Post
 from ..models.user import User
 
-class PostSchema(ma.ModelSchema):
+class PostSchema(ma.SQLAlchemyAutoSchema):
 
     class Meta:
         model = Post

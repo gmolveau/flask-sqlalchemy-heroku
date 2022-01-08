@@ -1,25 +1,28 @@
 import time
-from flask_script import Manager
+
+import click
+from dotenv import load_dotenv
+load_dotenv()
+
 from app import create_app, db
-
 app = create_app()
-manager = Manager(app)
 
-@manager.command
-def createdb():
+@app.cli.command("create_db")
+def create_db():
     db.create_all()
 
-@manager.command
-def dropdb():
+@app.cli.command("drop_db")
+def drop_db():
     db.drop_all()
 
-@manager.command
-def resetdb():
+@app.cli.command("reset_db")
+def reset_db():
     db.drop_all()
     db.create_all()
 
-@manager.command
-def makeAdmin(user_id):
+@app.cli.command("make_admin")
+@click.argument("user_id")
+def make_admin(user_id):
     time_start = time.time()
     from app.models.user import User
     user = User.query.get(user_id)
@@ -30,13 +33,8 @@ def makeAdmin(user_id):
     print("user :",user.username,"is now admin. \n")
     print("temps nécessaire =",str(time_end - time_start),"seconds. \n")
 
-@manager.command
-def scheduleTask():
+@app.cli.command("schedule_task")
+def schedule_task():
     t = "i am a scheduled action, yeah"
     print(t)
     app.logger.debug(t)
-
-# manager's doc = https://flask-script.readthedocs.io/en/latest/
-
-if __name__ == "__main__":
-    manager.run()

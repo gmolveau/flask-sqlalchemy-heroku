@@ -2,7 +2,6 @@ from flask import Flask, session
 from flask_sqlalchemy import SQLAlchemy
 from flask_marshmallow import Marshmallow
 from flask_bcrypt import Bcrypt
-from dotenv import load_dotenv
 import os, logging
 
 db = SQLAlchemy()
@@ -10,8 +9,6 @@ ma = Marshmallow()
 bcrypt = Bcrypt()
 
 def create_app():
-    dotenv_path = join(dirname(__file__), '..', '.env')
-    load_dotenv(dotenv_path)
     app = Flask(__name__)
 
     app.config['SQLALCHEMY_DATABASE_URI'] = os.environ.get(

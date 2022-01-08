@@ -1,42 +1,62 @@
-# Boilerplate for a flask based app with sqlalchemy and postgresql, deploy easily on heroku
+# Flask + SQLAlchemy + Heroku
+
+A boilerplate for a flask based app with sqlalchemy and postgresql -> deploy easily on heroku
 
 [![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
 
-dependencies used in the virtual_env :
+## Getting started
 
-`flask flask-sqlalchemy flask-script gunicorn psycopg2 flask-marshmallow requests python-dotenv flask-bcrypt marshmallow-sqlalchemy python-dotenv`
-
-Install the app and environment :
+Install the app
 
 ```bash
-git clone https://github.com/gmolveau/flask-sqlalchemy-heroku
-cd flask-sqlalchemy-heroku
-virtualenv venv -p python3
-source venv/bin/activate
-pip3 install -r requirements.txt
+$ python3 -m venv venv
+$ source venv/bin/activate
+(venv) $ pip install -r requirements.txt
 ```
 
-Test the app :
+### Dev mode
+
+Copy the `.env.example` to `.env`.
+
+The default URL for the database should work by default.
+
+Run the database + adminer :
 
 ```bash
-# if the heroku toolbelt is installed
+docker-compose -f docker-compose.dev.yml up -d
+```
+
+Reset the database :
+
+```bash
+FLASK_APP=manage.py flask reset_db
+```
+
+Launch the app
+
+```bash
+FLASK_ENV=development FLASK_APP=manage.py flask run
+```
+
+Try to visit http://localhost:5000/api/v1/
+
+## Heroku
+
+https://devcenter.heroku.com/articles/getting-started-with-python
+
+### Run locally
+
+```bash
+# with the heroku toolbelt installed : https://devcenter.heroku.com/articles/heroku-cli
 heroku local
-
-# else if on unix
-gunicorn wsgi:app
-
-# else if on windows
-python3 wsgi.py
 ```
 
-Test the stack (with docker) :
-```bash
-docker-compose up --build
-
-# or in the background with
-docker-compose up --build -d
-```
+### Task scheduling
 
 Schedule a task for free every 10 minutes, every hour, or every day with heroku-scheduler :
 
-![Scheduler](heroku_scheduler_example.png)
+![Scheduler](docs/heroku_scheduler_example.png)
+
+## Todo
+
+- Use flask-migrate (alembic)

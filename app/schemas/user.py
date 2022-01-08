@@ -8,7 +8,7 @@ from ..schemas.post import post_schema, posts_schema
 
 # nesting schema docs = https://marshmallow.readthedocs.io/en/latest/nesting.html
 
-class UserSchema(ma.ModelSchema):
+class UserSchema(ma.SQLAlchemyAutoSchema):
 
     id = fields.Int()
     username = fields.String()
