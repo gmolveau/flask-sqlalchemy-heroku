@@ -38,3 +38,6 @@ def schedule_task():
     t = "i am a scheduled action, yeah"
     print(t)
     app.logger.debug(t)
+
+if __name__ == '__main__':
+	app.run(debug=True, host='0.0.0.0', port=5000)

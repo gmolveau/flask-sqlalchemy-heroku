@@ -70,8 +70,8 @@ def get_user(username):
     return jsonify(error="user not found"),404
 
 
-@api.route('/users/<int:user_id>/posts', methods=['POST'])
-def create_post(user_id):
+@api.route('/posts', methods=['POST'])
+def create_post():
     datas = request.get_json()
 
     url = datas.get('url', '')
@@ -81,6 +81,10 @@ def create_post(user_id):
     description = datas.get('description', '')
     if description is '':
         return jsonify(error="description is empty"),400
+
+    user_id = datas.get('user_id', '')
+    if user_id is '':
+        return jsonify(error="user_id is empty"),400
 
     post = Post()
     post.url = url
@@ -92,8 +96,13 @@ def create_post(user_id):
     return post_schema.jsonify(post),200
 
 
-@api.route('/users/<int:user_id>/upvotes/<int:post_id>', methods=['POST'])
-def upvote_post(user_id, post_id):
+@api.route('/posts/<int:post_id>/upvote', methods=['POST'])
+def upvote_post(post_id):
+    datas = request.get_json()
+    user_id = datas.get('user_id', '')
+    if user_id is '':
+        return jsonify(error="user_id is empty"),400
+
     user = User.query.get(user_id)
     if user is not None:
         post = Post.query.get(post_id)
@@ -105,27 +114,37 @@ def upvote_post(user_id, post_id):
     return jsonify(error="user not found"),404
 
 
-@api.route('/users/<int:user_id>/following/<int:follow_id>', methods=['POST'])
-def follow_user(user_id, post_id):
+@api.route('/follow/<follow_id>', methods=['POST'])
+def follow_user(follow_id):
+    datas = request.get_json()
+    user_id = datas.get('user_id', '')
+    if user_id is '':
+        return jsonify(error="user_id is empty"),400
+
     user = User.query.get(user_id)
     if user is not None:
-        follow = User.query.get(user_id)
-        if post is not None:
-            user.upvoted_posts.append(post)
+        follow = User.query.get(follow_id)
+        if follow is not None:
+            user.following.append(follow_id)
             db.session.commit()
             return jsonify(state="ok"),200
-        return jsonify(error="post not found"),404
+        return jsonify(error="user to follow not found"),404
     return jsonify(error="user not found"),404
 
 
-@api.route('/users/<int:user_id>/following/<int:follow_id>', methods=['DELETE'])
-def unfollow_user(user_id, post_id):
+@api.route('/follow/<int:follow_id>', methods=['DELETE'])
+def unfollow_user(follow_id):
+    datas = request.get_json()
+    user_id = datas.get('user_id', '')
+    if user_id is '':
+        return jsonify(error="user_id is empty"),400
+
     user = User.query.get(user_id)
     if user is not None:
-        follow = User.query.get(user_id)
-        if post is not None:
-            user.upvoted_posts.remove(post)
+        follow = User.query.get(follow_id)
+        if follow is not None:
+            user.following.remove(follow_id)
             db.session.commit()
             return jsonify(state="ok"),200
-        return jsonify(error="post not found"),404
+        return jsonify(error="follow user not found"),404
     return jsonify(error="user not found"),404
