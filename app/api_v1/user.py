@@ -8,8 +8,8 @@ from ..schemas.post import post_schema, posts_schema
 from ..models.user import User
 from ..schemas.user import user_schema, users_schema
 
-@api.route('/users/signup', methods=['POST'])
-def signup_user():
+@api.route('/register', methods=['POST'])
+def register():
     datas = request.get_json()
     username=datas.get('username','')
     if username is '':
@@ -31,8 +31,8 @@ def signup_user():
     return user_schema.jsonify(u),200
 
 
-@api.route('/users/login', methods=['POST'])
-def login_username_or_email():
+@api.route('/login', methods=['POST'])
+def login_with_username_or_email():
     datas = request.get_json()
 
     password=datas.get('password','')
