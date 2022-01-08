@@ -32,6 +32,15 @@ Reset the database :
 FLASK_APP=main.py flask reset_db
 ```
 
+Explore the database :
+
+- go to http://localhost:8123
+    - System = Postgresql
+    - Server = db # name of the service in the docker-compose
+    - Username = <username>
+    - Password = <password>
+    - Database = <database_name>
+
 Launch the app
 
 ```bash
