@@ -5,7 +5,8 @@ from flask_expects_json import expects_json
 from marshmallow import ValidationError
 
 from . import api
-from .. import db, bcrypt
+from ..database import db
+from ..bcrypt import b_crypt
 
 from ..models.post import Post
 from ..schemas.post import PostSchema, post_schema, posts_schema
@@ -28,7 +29,7 @@ def register():
     u = User()
     u.username = g.data.get('username')
     u.email = g.data.get('email')
-    u.password = bcrypt.generate_password_hash(g.data.get('password'))
+    u.password = b_crypt.generate_password_hash(g.data.get('password'))
     db.session.add(u)
     db.session.commit()
     return user_schema.jsonify(u),200
@@ -48,7 +49,7 @@ def login_with_username_or_email():
 
     user = User.query.filter(User.username.ilike(username)).first()
     if user is not None:
-        if bcrypt.check_password_hash(user.password, password):
+        if b_crypt.check_password_hash(user.password, password):
             # pour les token, regarder du coté des JSON Web Token
             # librairie : itsdangerous
             return jsonify(token="token par exemple pour passer à l'API"),200
@@ -60,7 +61,7 @@ def login_with_username_or_email():
 
     user = User.query.filter(User.email.ilike(email)).first()
     if user is not None:
-        if bcrypt.check_password_hash(user.password, password):
+        if b_crypt.check_password_hash(user.password, password):
             return jsonify(token="token par exemple pour passer à l'API"),200
     return jsonify(error="username, mail or password is incorrect"),300
 

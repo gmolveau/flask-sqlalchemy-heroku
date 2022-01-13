@@ -1,5 +1,5 @@
 from marshmallow import fields
-from .. import ma
+from ..marshmallow import ma
 
 from ..models.user import User
 

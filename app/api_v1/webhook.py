@@ -1,7 +1,7 @@
 import requests, json
 from flask import Response, request, current_app
 from . import api
-from .. import db
+from ..database import db
 
 @api.route('/webhook', methods=['GET'])
 def webhook_verify():

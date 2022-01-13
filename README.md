@@ -29,7 +29,7 @@ docker-compose -f docker-compose.dev.yml up -d
 Reset the database :
 
 ```bash
-FLASK_APP=main.py flask reset_db
+flask reset_db
 ```
 
 Explore the database :
@@ -44,7 +44,7 @@ Explore the database :
 Launch the app
 
 ```bash
-FLASK_ENV=development FLASK_APP=main.py flask run
+FLASK_ENV=development flask run
 ```
 
 Try to visit http://localhost:5000/api/v1/

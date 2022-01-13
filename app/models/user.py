@@ -1,4 +1,4 @@
-from .. import db
+from ..database import db
 
 # many to many entre 2 models différents
 upvote_post =   db.Table('upvote_post',

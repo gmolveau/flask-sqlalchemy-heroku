@@ -1,5 +1,5 @@
 from marshmallow import fields, EXCLUDE
-from .. import ma
+from ..marshmallow import ma
 
 from ..models.post import Post
 from ..models.user import User
